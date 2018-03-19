@@ -1,0 +1,55 @@
+{
+	"variables": [],
+	"info": {
+		"name": "website",
+		"_postman_id": "b62d8742-c0a4-35fc-95be-2ee554d66396",
+		"description": "website api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "sys",
+			"description": "",
+			"item": [
+				{
+					"name": "user login",
+					"request": {
+						"url": "http://my.website.com/sys/user/login",
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_login",
+									"value": "jeffrey@ws.com",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "user_pass",
+									"value": "123456",
+									"type": "text",
+									"description": ""
+								}
+							]
+						},
+						"description": "http://my.website.com/sys/user/login"
+					},
+					"response": []
+				},
+				{
+					"name": "user logout",
+					"request": {
+						"url": "http://my.website.com/sys/user/logout",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": "http://my.website.com/sys/user/logout"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
