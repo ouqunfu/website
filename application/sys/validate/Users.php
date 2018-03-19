@@ -12,32 +12,32 @@ use think\Validate;
 class Users extends Validate
 {
     protected $rule = [
-        'user_name' => 'require|length:4,20',
-        'login_passwd' => 'require|alphaNum',
+        'user_login' => 'require|length:4,20',
+        'user_pass' => 'require|alphaNum',
         'login_password_confirm' => 'require|confirm:login_passwd',
-        'email' => 'require|email',
+        'user_email' => 'require|email',
         'role_id' => 'require|number',
-        'status' => 'require',
-        'user_id' => 'require|number'
+        'user_status' => 'require',
+        'ID' => 'require|number'
     ];
 
     protected $message = [
-        'user_name.require' => 'Param login name can not be empty!',
-        'user_name.length' => 'Param login name length require 4 to 20!',
-        'login_passwd.require' => 'Param login password can not be empty!',
-        'login_passwd.alphaNum' => 'Param login password only letters and numbers!',
+        'user_login.require' => 'Param login name can not be empty!',
+        'user_login.length' => 'Param login name length require 4 to 20!',
+        'user_pass.require' => 'Param login password can not be empty!',
+        'user_pass.alphaNum' => 'Param login password only letters and numbers!',
         'login_password_confirm.confirm' => 'Param password and confirm password inconsistent!',
-        'email.email' => 'Param email format is incorrect!',
+        'user_email.email' => 'Param email format is incorrect!',
         'role_id.require' => 'Param role can not be empty!',
-        'status.require' => 'Param status can not be empty!',
-        'user_id.number' => 'Param userId only numbers!'
+        'user_status.require' => 'Param status can not be empty!',
+        'ID.number' => 'Param userId only numbers!'
     ];
 
     //validate scene
     protected $scene = [
-        'login' => ['email', 'login_passwd'],
-        'create' => ['user_name', 'login_passwd', 'login_password_confirm', 'email', 'role_id', 'status'],
-        'edit' => ['user_name', 'email', 'role_id', 'status','user_id'],
+        'login' => ['user_email', 'user_pass'],
+        'create' => ['user_login', 'user_pass', 'login_password_confirm', 'user_email', 'role_id', 'user_status'],
+        'edit' => ['user_login', 'user_email', 'role_id', 'user_status','Id'],
     ];
 
 }

@@ -24,43 +24,42 @@ class UserController extends BaseController
         if (Session::get('user')) {
             $sessionUser = Session::get('user');
             $data = [
-                'userId' => $sessionUser['user_id'],
-                'userName' => $sessionUser['user_name']
+                'userId' => $sessionUser['ID'],
+                'userName' => $sessionUser['user_login']
             ];
             return $this->_res(Constants::ERROR_OK, 'Sign in success!', $data);
         }
 
-        list($userPwd, $loginName) = $this->_validateParams(['login_passwd', 'login_name'], Constants::HTTP_POST);
+        list($userPwd, $loginName) = $this->_validateParams(['user_pass', 'user_login'], Constants::HTTP_POST);
 
         //validate user info
         $loginValidate = validate('Users');
-        if (!$loginValidate->scene('login')->check(['email' => $loginName, 'login_passwd' => $userPwd])) {
+        if (!$loginValidate->scene('login')->check(['user_email' => $loginName, 'user_pass' => $userPwd])) {
             return $this->_res(Constants::ERROR_PARAMS, $loginValidate->getError());
         }
 
         $loginService = new UsersService();
-        $map['email'] = $loginName;
+        $map['user_email'] = $loginName;
         $user = $loginService->getInfo($map);
         if (!$user) {
             return $this->_res(Constants::ERROR_OBJECT_NOT_EXIST, 'Users is not exist!');
         }
 
-        if ($user['status'] != Constants::STATUS_ACTIVE) {
+        if ($user['user_status'] != Constants::STATUS_ACTIVE) {
             return $this->_res(Constants::ERROR_STATUS_ERROR, 'Users status error!');
         }
-        $pwd = CommonUtil::generatePwd($userPwd, $user['login_salt']);
-        if ($pwd != $user['login_passwd']) {
+        $pwd = CommonUtil::generatePwd($userPwd, $user['user_login_salt']);
+        if ($pwd != $user['user_pass']) {
             return $this->_res(Constants::ERROR_LOGIN, 'Password Error!');
         }
-        $user['create_time'] = strtotime($user['create_time']);
 
         //update user info
         $userInfo = $user;
-        $userInfo['last_login_time'] = time();
+        $userInfo['last_login_time'] = date('Y-m-d H:i:s');
         $userInfo['last_login_ip'] = CommonUtil::getClientIP();
         $userInfo['last_login_ua'] = $_SERVER['HTTP_USER_AGENT'];
         $userService = new UsersService();
-        $res = $userService->update(['user_id' => $user['user_id']], $userInfo);
+        $res = $userService->update(['ID' => $user['ID']], $userInfo);
         if (!$res) {
             return $this->_res(Constants::ERROR_SERVER, 'Login fail!');
         }
@@ -69,8 +68,8 @@ class UserController extends BaseController
         Session::set('user', $userInfo);
 
         $data = [
-            'userId' => $userInfo['user_id'],
-            'userName' => $userInfo['user_name']
+            'userId' => $userInfo['ID'],
+            'userName' => $userInfo['user_login']
         ];
         return $this->_res(Constants::ERROR_OK, 'Sign in success!', $data);
     }
