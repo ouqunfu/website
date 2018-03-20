@@ -30,7 +30,6 @@ class Functions extends Model
      * @param string $field
      * @return array|false|\PDOStatement|string|Model
      */
-
     public function getOne(array $condition = [], array $conditionOr = [], $field = '*')
     {
         $field = !empty($field) ? $field : '*';

@@ -6,6 +6,7 @@ use app\common\controller\BaseController;
 use app\common\service\Constants;
 use app\common\service\CommonUtil;
 use app\sys\service\RoleService;
+use app\sys\service\UserMetaService;
 use app\sys\service\UsersService;
 use think\Session;
 
@@ -91,17 +92,17 @@ class UserController extends BaseController
      */
     public function lists()
     {
-        $userName = input('get.user_name/s');
+        $userName = input('get.user_login/s');
         $page = input('get.page/d');
         $sortKey = input('get.sort_key/s');
         $sortValue = input('get.sort_value/d');
         $userService = new UsersService();
         $map = [];
         if (!empty($userName)) {
-            $map['user_name|email'] = ['like', '%' . $userName . '%'];
+            $map['user_login|email'] = ['like', '%' . $userName . '%'];
         }
         $page = intval($page) ? intval($page) : 1;
-        $sortKey = empty($sortKey) ? 'user_id' : $sortKey;
+        $sortKey = empty($sortKey) ? 'ID' : $sortKey;
         $sortValue = (empty($sortValue) || intval($sortValue) >= 0) ? 'asc' : 'desc';
 
         $sort = $sortKey . ' ' . $sortValue;
@@ -117,28 +118,29 @@ class UserController extends BaseController
      */
     public function create()
     {
-        list($data['user_name'], $data['email'], $data['login_passwd'], $data['login_password_confirm'], $data['status'], $data['role_id'], $data['remark']
-            ) = $this->_validateParams(['login_name', 'email', 'login_passwd', 'login_password_confirm', 'status', 'role_id'], Constants::HTTP_POST, ['remark']);
+        list($data['user_login'], $data['user_email'], $data['user_pass'], $data['login_password_confirm'], $data['user_status'], $data['role_id']
+            ) = $this->_validateParams(['user_login', 'user_email', 'user_pass', 'login_password_confirm', 'user_status', 'role_id'], Constants::HTTP_POST);
         //validate user data
         $loginValidate = validate('Users');
         if (!$loginValidate->scene('create')->check($data)) {
             return $this->_res(Constants::ERROR_PARAMS, $loginValidate->getError());
         }
+        //user meta data
+        list($metaData['safe_question'], $metaData['answer']) = $this->_validateParams(['safe_question', 'answer'], Constants::HTTP_POST);
         $userService = new UsersService();
         //validate user name or email whether exist
-        $map = [
-            'user_name' => $data['user_name']
-        ];
-        $mapOr = [
-            'email' => $data['email']
-        ];
+        $map = ['user_login' => $data['user_login']];
+        $mapOr = ['user_email' => $data['user_email']];
         $userService->checkInfo($map, $mapOr);
         unset($data['login_password_confirm']);
         //generate password
-        $data['login_salt'] = CommonUtil::generateSalt();
-        $data['login_passwd'] = CommonUtil::generatePwd($data['login_passwd'], $data['login_salt']);
+        $data['user_login_salt'] = CommonUtil::generateSalt();
+        $data['user_pass'] = CommonUtil::generatePwd($data['user_pass'], $data['user_login_salt']);
+        $data['user_created'] = date('Y-m-d H:i:s');
         $res = $userService->create($data);
         if ($res) {
+            // safe question and answer
+            (new UserMetaService())->addUserMetaData($metaData, $res);
             return $this->_res(Constants::ERROR_OK, 'Users created successfully!');
         }
         return $this->_res(Constants::ERROR_SERVER, 'Users created failed!');
@@ -150,39 +152,43 @@ class UserController extends BaseController
      */
     public function update()
     {
-        list($data['user_name'], $data['email'], $data['status'], $data['role_id'], $data['user_id'], $data['remark']
-            ) = $this->_validateParams(['login_name', 'email', 'status', 'role_id', 'user_id'], Constants::HTTP_POST, ['remark']);
-        list($data['login_passwd'], $data['login_password_confirm']) = $this->_receiveParams(['login_passwd', 'login_password_confirm'], Constants::HTTP_POST);
-        if (!empty(trim($data['login_passwd'])) && trim($data['login_passwd']) != trim($data['login_password_confirm'])) {
+        list($data['user_login'], $data['user_email'], $data['user_pass'], $data['login_password_confirm'], $data['user_status'], $data['role_id']
+            ) = $this->_validateParams(['user_login', 'user_email', 'user_pass', 'login_password_confirm', 'user_status', 'role_id'], Constants::HTTP_POST);
+        list($data['user_pass'], $data['login_password_confirm']) = $this->_receiveParams(['user_pass', 'login_password_confirm'], Constants::HTTP_POST);
+        if (!empty(trim($data['user_pass'])) && trim($data['user_pass']) != trim($data['login_password_confirm'])) {
             return $this->_res(Constants::ERROR_PARAMS, 'Param password and confirm password inconsistent!');
         }
+        //user meta data
+        list($metaData['safe_question'], $metaData['answer']) = $this->_validateParams(['safe_question', 'answer'], Constants::HTTP_POST);
         //validate user data
         $loginValidate = validate('Users');
         if (!$loginValidate->scene('edit')->check($data)) {
             return $this->_res(Constants::ERROR_PARAMS, $loginValidate->getError());
         }
         $userService = new UsersService();
-        $userId = $data['user_id'];
+        $userId = $data['ID'];
         //validate user name or email whether exist
         $map = [
-            'user_name' => $data['user_name'],
-            'user_id' => ['<>', intval($userId)]
+            'user_login' => $data['user_login'],
+            'ID' => ['<>', intval($userId)]
         ];
         $mapOr = [
-            'email' => $data['email'],
-            'user_id' => ['<>', intval($userId)]
+            'user_email' => $data['user_email'],
+            'ID' => ['<>', intval($userId)]
         ];
         //generate password
-        if (empty(trim($data['login_passwd'])) || empty(trim($data['login_password_confirm']))) {
-            unset($data['login_passwd']);
+        if (empty(trim($data['user_pass'])) || empty(trim($data['login_password_confirm']))) {
+            unset($data['user_pass']);
         } else {
-            $data['login_salt'] = CommonUtil::generateSalt();
-            $data['login_passwd'] = CommonUtil::generatePwd(trim($data['login_passwd']), $data['login_salt']);
+            $data['user_login_salt'] = CommonUtil::generateSalt();
+            $data['user_pass'] = CommonUtil::generatePwd(trim($data['user_pass']), $data['user_login_salt']);
         }
         unset($data['login_password_confirm']);
         $userService->checkInfo($map, $mapOr);
-        $res = $userService->update(['user_id' => intval($userId)], $data);
+        $res = $userService->update(['ID' => intval($userId)], $data);
         if ($res) {
+            // safe question and answer
+            (new UserMetaService())->addUserMetaData($metaData, $res);
             return $this->_res(Constants::ERROR_OK, 'Users updated successfully!');
         }
         return $this->_res(Constants::ERROR_SERVER, 'Users updated failed!');
@@ -193,34 +199,10 @@ class UserController extends BaseController
      */
     public function get()
     {
-        list($userId) = $this->_validateParams(['user_id'], Constants::HTTP_GET);
+        list($userId) = $this->_validateParams(['ID'], Constants::HTTP_GET);
         $userService = new UsersService();
-        $userInfo = $userService->getInfo(['user_id' => $userId], [], 'user_id,user_name,email,status,skype,phone,qq,remark,role_id');
+        $userInfo = $userService->getInfo(['ID' => $userId], [], 'ID,user_login,user_email,user_status,role_id');
 
         return $this->_res(Constants::ERROR_OK, 'Users info!', $userInfo);
     }
-
-    /**
-     * 用户状态更改
-     */
-    public function changeStatus()
-    {
-        list($userId) = $this->_validateParams(['user_id'], Constants::HTTP_GET);
-        $userService = new UsersService();
-        $userInfo = $userService->getInfo(['user_id' => $userId], [], ' user_id, status ');
-        $data = [];
-        if ($userInfo['status'] == Constants::STATUS_ACTIVE) {
-            $data['status'] = Constants::STATUS_PAUSED;
-        }
-        if ($userInfo['status'] == Constants::STATUS_PAUSED) {
-            $data['status'] = Constants::STATUS_ACTIVE;
-        }
-        $res = $userService->update(['user_id' => $userInfo['user_id']], $data);
-        if ($res) {
-            return $this->_res(Constants::ERROR_OK, 'Users status changed successfully!');
-        }
-        return $this->_res(Constants::ERROR_SERVER, 'Users status changed failed!');
-
-    }
-
 }

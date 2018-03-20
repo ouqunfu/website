@@ -14,7 +14,7 @@ class Users extends Validate
     protected $rule = [
         'user_login' => 'require|length:4,20',
         'user_pass' => 'require|alphaNum',
-        'login_password_confirm' => 'require|confirm:login_passwd',
+        'login_password_confirm' => 'require|confirm:user_pass',
         'user_email' => 'require|email',
         'role_id' => 'require|number',
         'user_status' => 'require',

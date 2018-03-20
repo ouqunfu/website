@@ -1,8 +1,11 @@
 <?php
-namespace app\index\controller;
-use app\common\controller\BaseController;
 
-class IndexController extends BaseController
+namespace app\index\controller;
+
+use app\common\controller\BaseController;
+use think\Controller;
+
+class IndexController extends Controller
 {
     public function index()
     {
@@ -10,8 +13,8 @@ class IndexController extends BaseController
     }
 
     //增加
-    public function add(){
-
+    public function add()
+    {
         $data['user_name'] = 'test_admin';
         $data['login_passwd'] = 'setestadmin';
         $res = db('users', [], false)->insert($data);
@@ -19,26 +22,27 @@ class IndexController extends BaseController
     }
 
     //查询
-    public function select(){
-
-        $user_info = db('log', [], false)->field("*")->where('log_id',15)->select();
+    public function select()
+    {
+        header("Access-Control-Allow-Origin: *");
+        $user_info = db('log', [], false)->field("*")->where('log_id', 15)->select();
         dump($user_info);
 //        echo $user_info[0]['user_name'];
     }
 
     //修改
-    public function update(){
-
+    public function update()
+    {
         $data['login_passwd'] = md5(md5('123456'));
         $data['create_time'] = time();
-        $res = db('users', [], false)->where('user_id',15)->update($data);
+        $res = db('users', [], false)->where('user_id', 15)->update($data);
         dump($res);
     }
 
     //删除
-    public function delete(){
-
-        $res= db('users', [], false)->where('user_id',15)->delete();
+    public function delete()
+    {
+        $res = db('users', [], false)->where('user_id', 15)->delete();
         dump($res);
     }
 }

@@ -19,7 +19,7 @@ class Users extends Model
      */
     public function addInfo(array $data = [])
     {
-        $res = $this->insert($data);
+        $res = $this->insertGetId($data);
         return $res;
     }
 

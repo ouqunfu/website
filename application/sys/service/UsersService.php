@@ -24,15 +24,13 @@ class UsersService extends BaseService
     public function getInfo(array $condition = [], array $conditionOr = [], $field = '*')
     {
         if (empty($condition) || !is_array($condition)) {
-            return '';
+            return false;
         }
-
         $userModel = new Users();
         $userInfo = $userModel->getOne($condition, $conditionOr, $field);
         if (empty($userInfo)) {
             return '';
         }
-
         return $userInfo;
     }
 
@@ -50,18 +48,14 @@ class UsersService extends BaseService
         $userModel = new Users();
         $res = $userModel->getList($map, $mapOr, $field, $order, $page);
         $roleService = new RoleService();
-
         foreach ($res['list'] as $key => $v) {
-
             $roleMap['role_id'] = intval($v['role_id']);
             //获取角色信息
             $roleInfo = $roleService->getInfo($roleMap, [], 'role_name');
             if ($roleInfo) {
-
                 $res['list'][$key]['role_name'] = $roleInfo['role_name'];
             }
         }
-
         return $res;
     }
 
@@ -90,14 +84,8 @@ class UsersService extends BaseService
         if (empty($info)) {
             return false;
         }
-        //generate password
-        $info['login_salt'] = CommonUtil::generateSalt();
-        $info['login_passwd'] = CommonUtil::generatePwd($info['login_passwd'], $info['login_salt']);
-        $info['create_time'] = time();
-
         $userModel = new Users();
         $res = $userModel->addInfo($info);
-
         return $res;
     }
 
@@ -112,10 +100,10 @@ class UsersService extends BaseService
         $userModel = new Users();
         $res = $userModel->getOneByClosure($map, $mapOr);
         if ($res) {
-            if ($res['user_name'] == $map['user_name']) {
+            if ($res['user_login'] == $map['user_login']) {
                 return $this->_res(Constants::ERROR_REPEAT, 'Param user name is exist!');
             }
-            if ($res['email'] == $mapOr['email']) {
+            if ($res['user_email'] == $mapOr['user_email']) {
                 return $this->_res(Constants::ERROR_REPEAT, 'Param email is exist!');
             }
         }
@@ -134,13 +122,11 @@ class UsersService extends BaseService
         if (empty($info) || !is_array($info) || empty($condition)) {
             return false;
         }
-
         $userModel = new Users();
         $res = $userModel->updateInfo($condition, $info);
         if ($res || (0 == $res)) {
             return true;
         }
-
         return $res;
     }
 }

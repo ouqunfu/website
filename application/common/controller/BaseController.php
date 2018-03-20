@@ -47,8 +47,8 @@ class BaseController extends Controller
                 'request_method' => $this->request->method(),
                 'action_function' => $this->request->action(),
                 'action_param' => json_encode($this->request->param()),
-                'user_id' => $user['user_id'],
-                'user_name' => $user['user_name'],
+                'user_id' => $user['ID'],
+                'user_name' => $user['user_login'],
                 'create_time' => time(),
                 'action_device' => isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '',
                 'action_ip' => CommonUtil::getClientIP()
@@ -137,6 +137,7 @@ class BaseController extends Controller
      */
     protected function _res($code = 0, $message = '', $data = [], $pageCount = 0, $count = 0, array $addedData = [])
     {
+        header("Access-Control-Allow-Origin: *");
         $data = ['code' => $code, 'message' => $message, 'data' => $data, 'page_count' => $pageCount, 'count' => $count, 'added_data' => $addedData];
         throw new HttpResponseException(Response::create(json_encode($data, JSON_UNESCAPED_UNICODE), '', 200));
     }
