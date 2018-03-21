@@ -97,9 +97,28 @@ class UserMetaService extends BaseService
         return $res;
     }
 
+    /**
+     * update user meta data
+     * @param array $data
+     * @param int $userId
+     * @return array|bool|false
+     */
     public function updateUserMetaData(array $data = [], $userId = 0)
     {
         if (empty($data) || !is_numeric($userId) || $userId < 0) return false;
-        
+        $userMetaModel = new Usermeta();
+        $metaData = $userMetaModel->where(['user_id' => $userId])->where('meta_key', ['eq', 'safe_question'], ['eq', 'answer'], 'or')->select();
+        $metaData = $metaData->toArray();
+        if (empty($metaData)) return false;
+        foreach ($metaData as $key => $metaDatum) {
+            if ('safe_question' == $metaDatum['meta_key']) {
+                $metaData[$key]['meta_value'] = $data['safe_question'];
+            }
+            if ('answer' == $metaDatum['meta_key']) {
+                $metaData[$key]['meta_value'] = $data['answer'];
+            }
+        }
+        $res = $this->updateAll($metaData);
+        return $res;
     }
 }

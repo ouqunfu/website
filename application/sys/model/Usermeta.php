@@ -71,4 +71,22 @@ class Usermeta extends Model
 
         return $res;
     }
+
+    /**
+     * get all
+     * @param array $condition
+     * @param array $conditionOr
+     * @param string $field
+     * @param string $order
+     * @return array|false|\PDOStatement|string|\think\Collection
+     */
+    public function getListAll(array $condition = [], array $conditionOr = [], $field = '*', $order = '')
+    {
+
+        $field = !empty($field) ? $field : '*';
+        $res = $this->field($field)->where($condition)->whereOr($conditionOr)->order($order)->select();
+        $res = $res ? $res->toArray() : [];
+
+        return $res;
+    }
 }

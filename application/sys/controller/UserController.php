@@ -152,8 +152,8 @@ class UserController extends BaseController
      */
     public function update()
     {
-        list($data['user_login'], $data['user_email'], $data['user_pass'], $data['login_password_confirm'], $data['user_status'], $data['role_id']
-            ) = $this->_validateParams(['user_login', 'user_email', 'user_pass', 'login_password_confirm', 'user_status', 'role_id'], Constants::HTTP_POST);
+        list($data['user_login'], $data['user_email'], $data['user_pass'], $data['login_password_confirm'], $data['user_status'], $data['role_id'], $data['ID']
+            ) = $this->_validateParams(['user_login', 'user_email', 'user_pass', 'login_password_confirm', 'user_status', 'role_id', 'ID'], Constants::HTTP_POST);
         list($data['user_pass'], $data['login_password_confirm']) = $this->_receiveParams(['user_pass', 'login_password_confirm'], Constants::HTTP_POST);
         if (!empty(trim($data['user_pass'])) && trim($data['user_pass']) != trim($data['login_password_confirm'])) {
             return $this->_res(Constants::ERROR_PARAMS, 'Param password and confirm password inconsistent!');
@@ -188,7 +188,7 @@ class UserController extends BaseController
         $res = $userService->update(['ID' => intval($userId)], $data);
         if ($res) {
             // safe question and answer
-            (new UserMetaService())->addUserMetaData($metaData, $res);
+            (new UserMetaService())->updateUserMetaData($metaData, $userId);
             return $this->_res(Constants::ERROR_OK, 'Users updated successfully!');
         }
         return $this->_res(Constants::ERROR_SERVER, 'Users updated failed!');
