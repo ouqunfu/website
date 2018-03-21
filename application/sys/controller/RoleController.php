@@ -20,12 +20,7 @@ class RoleController extends BaseController
      */
     public function create()
     {
-        list(
-            $data['role_name'],
-            $data['status'],
-            ) = $this->_validateParams(['role_name', 'status'], Constants::HTTP_POST);
-
-
+        list($data['role_name'], $data['status'],) = $this->_validateParams(['role_name', 'status'], Constants::HTTP_POST);
         $roleRule = input('post.role_rule/a');
         if ($roleRule && is_array($roleRule)) {
             $data['role_rule'] = implode(',', $roleRule);
@@ -47,12 +42,7 @@ class RoleController extends BaseController
      */
     public function update()
     {
-        list(
-            $data['role_name'],
-            $data['status'],
-            $data['role_id']
-            ) = $this->_validateParams(['role_name', 'status', 'role_id'], Constants::HTTP_POST);
-
+        list($data['role_name'], $data['status'], $data['role_id']) = $this->_validateParams(['role_name', 'status', 'role_id'], Constants::HTTP_POST);
         $roleRule = input('post.role_rule/a');
         if ($roleRule && is_array($roleRule)) {
             $data['role_rule'] = implode(',', $roleRule);
@@ -77,7 +67,6 @@ class RoleController extends BaseController
         $sort = (intval($sort) >= 0) ? 'asc' : 'desc';
         $roleService = new RoleService();
         $res = $roleService->getList([], [], '', ' list_order ' . $sort, $page);
-
         return $this->_res(Constants::ERROR_OK, 'Role list!', $res['list'], $res['page_count'], $res['count']);
     }
 
@@ -95,7 +84,6 @@ class RoleController extends BaseController
         $funcService = new FunctionsService();
         $nodeList = $funcService->nodeList($selected);
         $roleInfo['node_list'] = $nodeList;
-
         return $this->_res(Constants::ERROR_OK, 'Role info!', $roleInfo);
     }
 
@@ -107,7 +95,6 @@ class RoleController extends BaseController
     {
         $roleService = new RoleService();
         $res = $roleService->getListAll(['status' => 'active'], [], 'role_id,role_name');
-
         return $this->_res(Constants::ERROR_OK, 'Role list!', $res);
     }
 
@@ -120,7 +107,6 @@ class RoleController extends BaseController
         list($roleId) = $this->_validateParams(['role_id'], Constants::HTTP_GET);
         $roleService = new RoleService();
         $roleInfo = $roleService->getInfo(['role_id' => $roleId], [], ' role_id, status ');
-
         $data = [];
         if ($roleInfo['status'] == Constants::STATUS_ACTIVE) {
             $data['status'] = Constants::STATUS_PAUSED;
@@ -133,6 +119,5 @@ class RoleController extends BaseController
             return $this->_res(Constants::ERROR_OK, 'Role status changed successfully!');
         }
         return $this->_res(Constants::ERROR_SERVER, 'Role status changed failed!');
-
     }
 }
