@@ -111,6 +111,7 @@ class TermsService extends BaseService
         $map['term_id'] = ['in', $termIds];
         $map['meta_key'] = 'category_is_nav';
 
+
         return $category;
     }
 
