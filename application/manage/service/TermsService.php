@@ -102,8 +102,9 @@ class TermsService extends BaseService
     {
         //get category
         $termTaxonomyService = new TermTaxonomyService();
-        $category = $termTaxonomyService->getList(['taxonomy' => 'category', 'parent' => 0], [], 'term_id', '', $page);
+        $category = $termTaxonomyService->getList(['taxonomy' => 'category'], [], 'term_id, parent', '', $page);
         $termIds = array_column($category['list'], 'term_id');
+        $parents = array_column($category['list'], 'parent', 'term_id');
         // get category base info
         $category['list'] = $this->getListAll(['term_id' => ['in', $termIds]]);
         // get category meta data
@@ -112,6 +113,7 @@ class TermsService extends BaseService
         $termMetaService = new TermmetaService();
         $termMetaData = $termMetaService->getListAll(['term_id' => ['in', $termIds], 'meta_key' => ['eq', 'category_is_nav']], ['meta_key' => 'category_sort']);
         foreach ($category['list'] as $key => $item) {
+            $item['parent'] = $parents[$item['term_id']];
             foreach ($termMetaData as $termMetaDatum) {
                 // 是否导航显示
                 if ($item['term_id'] == $termMetaDatum['term_id'] && 'category_is_nav' == $termMetaDatum['meta_key']) {
