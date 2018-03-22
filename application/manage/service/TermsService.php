@@ -105,28 +105,40 @@ class TermsService extends BaseService
         $category = $termTaxonomyService->getList(['taxonomy' => 'category', 'parent' => 0], [], 'term_id', '', $page);
         $termIds = array_column($category['list'], 'term_id');
         // get category base info
-        $termsModel = new Terms();
-        $category['list'] = $termsModel->getListAll(['term_id' => ['in', $termIds]]);
+        $category['list'] = $this->getListAll(['term_id' => ['in', $termIds]]);
         // get category meta data
         $map['term_id'] = ['in', $termIds];
-        $map['meta_key'] = 'category_is_nav';
-
-
+//        $map['meta_key'] = ['eq','category_is_nav';
+        $termMetaService = new TermmetaService();
+        $termMetaData = $termMetaService->getListAll(['term_id' => ['in', $termIds], 'meta_key' => ['eq', 'category_is_nav']], ['meta_key' => 'category_sort']);
+        foreach ($category['list'] as $key => $item) {
+            foreach ($termMetaData as $termMetaDatum) {
+                // 是否导航显示
+                if ($item['term_id'] == $termMetaDatum['term_id'] && 'category_is_nav' == $termMetaDatum['meta_key']) {
+                    $item['is_nav'] = $termMetaDatum['meta_value'];
+                }
+                // 排序
+                if ($item['term_id'] == $termMetaDatum['term_id'] && 'category_sort' == $termMetaDatum['meta_key']) {
+                    $item['sort'] = $termMetaDatum['meta_value'];
+                }
+            }
+            $category['list'][$key] = $item;
+        }
         return $category;
     }
 
     /**
      * get all
      * @param array $map
-     * @param string $groupBy
+     * @param array $mapOr
      * @param string $field
      * @param string $order
      * @return array|false|\PDOStatement|string|\think\Collection
      */
-    public function getListAll(array $map = [], $groupBy = '', $field = '*', $order = '')
+    public function getListAll(array $map = [], array $mapOr = [], $field = '*', $order = '')
     {
         $termsModel = new Terms();
-        $res = $termsModel->getListAll($map, $groupBy, $field, $order);
+        $res = $termsModel->getListAll($map, $mapOr, $field, $order);
         return $res;
     }
 }
