@@ -47,6 +47,21 @@ class TermmetaService extends BaseService
     }
 
     /**
+     * use primary key batch update term meta data
+     * @param array $data
+     * @return array|bool|false
+     */
+    public function updateAll(array $data = [])
+    {
+        if (empty($data)) {
+            return false;
+        }
+        $model = new Termmeta();
+        $res = $model->updateAll($data);
+        return $res;
+    }
+
+    /**
      * get info
      * @param array $condition
      * @param array $conditionOr
