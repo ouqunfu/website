@@ -28,6 +28,21 @@ class TermmetaService extends BaseService
     }
 
     /**
+     * insert batch terms data
+     * @param array $list
+     * @return bool|int|string
+     */
+    public function insertAll(array $list = [])
+    {
+        if (empty($list)) {
+            return false;
+        }
+        $model = new Termmeta();
+        $res = $model->addAll($list);
+        return $res;
+    }
+
+    /**
      * update terms
      * @param array $map
      * @param array $data
