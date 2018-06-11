@@ -1,10 +1,9 @@
 {
-	"variables": [],
 	"info": {
-		"name": "website",
 		"_postman_id": "b62d8742-c0a4-35fc-95be-2ee554d66396",
+		"name": "website",
 		"description": "website api",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -14,7 +13,6 @@
 				{
 					"name": "user login",
 					"request": {
-						"url": "http://my.website.com/sys/user/login",
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -34,6 +32,20 @@
 								}
 							]
 						},
+						"url": {
+							"raw": "http://my.website.com/sys/user/login",
+							"protocol": "http",
+							"host": [
+								"my",
+								"website",
+								"com"
+							],
+							"path": [
+								"sys",
+								"user",
+								"login"
+							]
+						},
 						"description": "http://my.website.com/sys/user/login"
 					},
 					"response": []
@@ -41,11 +53,407 @@
 				{
 					"name": "user logout",
 					"request": {
-						"url": "http://my.website.com/sys/user/logout",
 						"method": "GET",
 						"header": [],
 						"body": {},
+						"url": {
+							"raw": "http://my.website.com/sys/user/logout",
+							"protocol": "http",
+							"host": [
+								"my",
+								"website",
+								"com"
+							],
+							"path": [
+								"sys",
+								"user",
+								"logout"
+							]
+						},
 						"description": "http://my.website.com/sys/user/logout"
+					},
+					"response": []
+				},
+				{
+					"name": "user list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://my.website.com/sys/user/lists",
+							"protocol": "http",
+							"host": [
+								"my",
+								"website",
+								"com"
+							],
+							"path": [
+								"sys",
+								"user",
+								"lists"
+							]
+						},
+						"description": "http://my.website.com/sys/user/lists"
+					},
+					"response": []
+				},
+				{
+					"name": "user create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_login",
+									"value": "test4",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "user_pass",
+									"value": "1234567",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "login_password_confirm",
+									"value": "1234567",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "user_status",
+									"value": "active",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "role_id",
+									"value": "3",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "user_email",
+									"value": "test4@ws.com",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "safe_question",
+									"value": "safe question",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "answer",
+									"value": "safe question answer",
+									"type": "text",
+									"description": ""
+								}
+							]
+						},
+						"url": {
+							"raw": "http://my.website.com/sys/user/create",
+							"protocol": "http",
+							"host": [
+								"my",
+								"website",
+								"com"
+							],
+							"path": [
+								"sys",
+								"user",
+								"create"
+							]
+						},
+						"description": "http://my.website.com/sys/user/create"
+					},
+					"response": []
+				},
+				{
+					"name": "user update",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_login",
+									"value": "test4",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "user_pass",
+									"value": "1234567",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "login_password_confirm",
+									"value": "1234567",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "user_status",
+									"value": "active",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "role_id",
+									"value": "3",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "user_email",
+									"value": "test4@ws.com",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "safe_question",
+									"value": "safe question1112",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "answer",
+									"value": "answer11122",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "user_id",
+									"value": "5",
+									"type": "text",
+									"description": ""
+								}
+							]
+						},
+						"url": {
+							"raw": "http://my.website.com/sys/user/update",
+							"protocol": "http",
+							"host": [
+								"my",
+								"website",
+								"com"
+							],
+							"path": [
+								"sys",
+								"user",
+								"update"
+							]
+						},
+						"description": "http://my.website.com/sys/user/update"
+					},
+					"response": []
+				},
+				{
+					"name": "user get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://my.website.com/sys/user/get?user_id=5",
+							"protocol": "http",
+							"host": [
+								"my",
+								"website",
+								"com"
+							],
+							"path": [
+								"sys",
+								"user",
+								"get"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "5"
+								}
+							]
+						},
+						"description": "http://my.website.com/sys/user/get?ID=5"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "manage",
+			"description": "",
+			"item": [
+				{
+					"name": "terms list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://my.website.com/manage/terms/lists?page=1",
+							"protocol": "http",
+							"host": [
+								"my",
+								"website",
+								"com"
+							],
+							"path": [
+								"manage",
+								"terms",
+								"lists"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						},
+						"description": "http://my.website.com/manage/terms/lists?page=1"
+					},
+					"response": []
+				},
+				{
+					"name": "change term's sort",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://my.website.com/manage/terms/sort?ids=1,2,3&sort_data={\"1\":11,\"2\":21,\"3\":12}",
+							"protocol": "http",
+							"host": [
+								"my",
+								"website",
+								"com"
+							],
+							"path": [
+								"manage",
+								"terms",
+								"sort"
+							],
+							"query": [
+								{
+									"key": "ids",
+									"value": "1,2,3"
+								},
+								{
+									"key": "sort_data",
+									"value": "{\"1\":11,\"2\":21,\"3\":12}",
+									"description": "term_id => sort_value"
+								}
+							]
+						},
+						"description": "http://my.website.com/manage/terms/sort?ids=1,2,3&sort_value=3,2,1&sort_data={\"1\":11,\"2\":21,\"3\":12}"
+					},
+					"response": []
+				},
+				{
+					"name": "terms create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "parent",
+									"value": "0",
+									"description": "所属栏目",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "产品中心111",
+									"description": "栏目名称",
+									"type": "text"
+								},
+								{
+									"key": "slug",
+									"value": "product",
+									"description": "别名",
+									"type": "text"
+								},
+								{
+									"key": "meta_is_show_nav",
+									"value": "true",
+									"description": "是否在导航中显示",
+									"type": "text"
+								},
+								{
+									"key": "meta_title",
+									"value": "产品中心-产品",
+									"description": "seo页面标题",
+									"type": "text"
+								},
+								{
+									"key": "meta_keywords",
+									"value": "产品，最新",
+									"description": "seo页面关键词",
+									"type": "text"
+								},
+								{
+									"key": "meta_description",
+									"value": "产品，分类",
+									"description": "seo页面描述",
+									"type": "text"
+								},
+								{
+									"key": "meta_is_show",
+									"value": "1",
+									"description": "是否启用",
+									"type": "text"
+								},
+								{
+									"key": "meta_ext_link",
+									"value": "",
+									"description": "外部链接",
+									"type": "text"
+								},
+								{
+									"key": "meta_cover_content",
+									"value": "产品是指能够提供给市场，被人们使用和消费，并能满足人们某种需求的任何东西，包括有形的物品、无形的服务、组织、观念或它们的组合。产品一般可以分为三个层次，即核心产品、形式产品、延伸产品。核心产品是指整体产品提供给购买者的直接利益和效用；形式产品是指产品在市场上出现的物质实体外形，包括产品的品质、特征、造型、商标和包装等；延伸产品是指整体产品提供给顾客的一系列附加利益，包括运送、安装、维修、保证等在消费领域给予消费者的好处。",
+									"description": "栏目封面说明内容",
+									"type": "text"
+								},
+								{
+									"key": "meta_img",
+									"value": "",
+									"description": "栏目说明图片",
+									"type": "text"
+								},
+								{
+									"key": "meta_privilege",
+									"value": "[{\"group\":\"administrator\",\"browse\":false,\"download\":false},{\"group\":\"editor\",\"browse\":false,\"download\":false},{\"group\":\"commonuser\",\"browse\":false,\"download\":false},{\"group\":\"visitors\",\"browse\":false,\"download\":false}]",
+									"description": "前台操作目录权限设置{ [group name:'',browse:false, download:false]}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://my.website.com/manage/terms/create",
+							"protocol": "http",
+							"host": [
+								"my",
+								"website",
+								"com"
+							],
+							"path": [
+								"manage",
+								"terms",
+								"create"
+							]
+						},
+						"description": "http://my.website.com/manage/terms/create"
 					},
 					"response": []
 				}
